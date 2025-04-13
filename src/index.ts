@@ -18,6 +18,19 @@ function isEmptyValue(value: any): boolean {
   return false;
 }
 
+/**
+ * Sanitizes data by removing empty values and ensuring the result is a pure JavaScript object.
+ * Removes:
+ * - null and undefined values
+ * - empty strings (or strings with only whitespace)
+ * - empty objects (objects with only empty values)
+ * - functions
+ * 
+ * Arrays and Date objects are preserved.
+ * 
+ * @param data The data to sanitize
+ * @returns A pure JavaScript object with empty values removed, compatible with Firestore
+ */
 export function sanitizeData<T, U = T>(data: T): U {
   // Handle null/undefined input
   if (data === null || data === undefined) {
