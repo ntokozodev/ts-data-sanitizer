@@ -1,11 +1,14 @@
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
+  plugins: [dts({ tsconfigPath: './tsconfig.build.json' })],
   build: {
     lib: {
       entry: 'src/index.ts',
-      name: 'ts-data-sanitizer',
-      fileName: 'index'
+      name: 'Typescript data sanitizer',
+      fileName: 'ts-data-sanitizer',
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       external: [],
