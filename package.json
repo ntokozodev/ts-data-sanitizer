@@ -1,9 +1,9 @@
 {
   "name": "@gabzitdev/ts-data-sanitizer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TypeScript utility for sanitizing data by removing empty values, functions, and nulls",
-  "main": "dist/index.cjs",
-  "module": "dist/your-library.es.js",
+  "main": "dist/ts-data-sanitizer.js",
+  "module": "dist/ts-data-sanitizer.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
