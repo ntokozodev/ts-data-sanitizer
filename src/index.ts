@@ -29,7 +29,7 @@ function isEmptyValue(value: any): boolean {
  * Arrays and Date objects are preserved.
  * 
  * @param data The data to sanitize
- * @returns A pure JavaScript object with empty values removed, compatible with Firestore
+ * @returns A pure JavaScript object with empty values removed.
  */
 export function sanitizeData<T, U = T>(data: T): U {
   // Handle null/undefined input
