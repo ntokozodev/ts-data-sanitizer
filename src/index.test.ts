@@ -1,4 +1,4 @@
-import { sanitizeData, isFunction } from './index';
+import { sanitizeData } from './index';
 
 describe('sanitizeData', () => {
   it('should remove null and undefined values', () => {
@@ -187,39 +187,6 @@ describe('sanitizeData', () => {
     };
     const result = sanitizeData(data);
     expect(result).toEqual({});
-  });
-});
-
-describe('isFunction', () => {
-  it('should identify function declarations', () => {
-    function test() {}
-    expect(isFunction(test)).toBe(true);
-  });
-
-  it('should identify arrow functions', () => {
-    const test = () => {};
-    expect(isFunction(test)).toBe(true);
-  });
-
-  it('should identify function expressions', () => {
-    const test = function() {};
-    expect(isFunction(test)).toBe(true);
-  });
-
-  it('should identify class methods', () => {
-    class Test {
-      method() {}
-    }
-    const test = new Test();
-    expect(isFunction(test.method)).toBe(true);
-  });
-
-  it('should not identify non-functions', () => {
-    expect(isFunction(null)).toBe(false);
-    expect(isFunction(undefined)).toBe(false);
-    expect(isFunction({})).toBe(false);
-    expect(isFunction([])).toBe(false);
-    expect(isFunction('function')).toBe(false);
   });
 });
 

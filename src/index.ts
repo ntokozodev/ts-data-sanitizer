@@ -5,7 +5,7 @@ function isEmptyObject(value: any): boolean {
          Object.keys(value).length === 0;
 }
 
-export function isFunction<T>(x: T): boolean {
+function isFunction<T>(x: T): boolean {
   return x instanceof Function || typeof x === 'function';
 }
 
