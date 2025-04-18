@@ -2,53 +2,78 @@ import { sanitizeData } from './index';
 
 describe('sanitizeData', () => {
   it('should remove null and undefined values', () => {
+    // Arrange
     const data = {
       name: 'John',
       age: null,
       email: undefined
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({ name: 'John' });
   });
 
   it('should remove empty strings', () => {
+    // Arrange
     const data = {
       name: 'John',
       email: '',
       phone: '   '
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({ name: 'John' });
   });
 
   it('should remove empty objects', () => {
+    // Arrange
     const data = {
       name: 'John',
       empty: {},
       nested: { empty: {} }
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({ name: 'John' });
   });
 
   it('should remove functions', () => {
+    // Arrange
     const data = {
       name: 'John',
       handler: () => {},
       method: function() {}
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({ name: 'John' });
   });
 
   it('should handle arrays', () => {
+    // Arrange
     const data = {
       items: [
         { id: 1, value: null },
         { id: 2, value: '' }
       ]
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({
       items: [
         { id: 1 },
@@ -58,18 +83,24 @@ describe('sanitizeData', () => {
   });
 
   it('should preserve non-empty values', () => {
+    // Arrange
     const data = {
       name: 'John',
       age: 30,
       active: true,
       tags: ['developer', 'typescript']
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual(data);
   });
 
   // New test cases
   it('should handle deeply nested objects', () => {
+    // Arrange
     const data = {
       user: {
         profile: {
@@ -111,11 +142,16 @@ describe('sanitizeData', () => {
         }
       }
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual(expected);
   });
 
   it('should handle arrays with mixed content', () => {
+    // Arrange
     const data = {
       mixed: [
         'valid',
@@ -135,11 +171,16 @@ describe('sanitizeData', () => {
         [1]
       ]
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual(expected);
   });
 
   it('should handle Date objects', () => {
+    // Arrange
     const date = new Date();
     const data = {
       created: date,
@@ -154,11 +195,16 @@ describe('sanitizeData', () => {
         timestamp: date
       }
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual(expected);
   });
 
   it('should handle zero values correctly', () => {
+    // Arrange
     const data = {
       count: 0,
       price: 0.0,
@@ -175,24 +221,33 @@ describe('sanitizeData', () => {
         value: 0
       }
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual(expected);
   });
 
   it('should handle arrays with only empty values', () => {
+    // Arrange
     const data = {
       empty: ['', null, undefined],
       nested: [[], {}, null],
       mixed: [{ empty: '' }, { null: null }, { obj: {} }]
     };
+
+    // Act
     const result = sanitizeData(data);
+
+    // Assert
     expect(result).toEqual({});
   });
 });
 
 describe('sanitizeData Performance Tests', () => {
   it('Performance: Large Nested Objects', () => {
-    // Create a large nested object
+    // Arrange
     const largeObject: Record<string, any> = {};
     for (let i = 0; i < 1000; i++) {
       largeObject[`key${i}`] = {
@@ -204,16 +259,18 @@ describe('sanitizeData Performance Tests', () => {
       };
     }
 
+    // Act
     const start = performance.now();
     const result = sanitizeData(largeObject);
     const duration = performance.now() - start;
 
+    // Assert
     expect(duration).toBeLessThan(1000); // Should complete within 1 second
     expect(Object.keys(result).length).toBeLessThan(1000); // Some objects should be removed
   });
 
   it('Performance: Large Arrays', () => {
-    // Create a large array with mixed content
+    // Arrange
     const largeArray = Array(10000).fill(null).map((_, i) => ({
       id: i,
       value: i % 2 === 0 ? null : i,
@@ -221,10 +278,12 @@ describe('sanitizeData Performance Tests', () => {
       array: Array(5).fill(i % 4 === 0 ? null : i)
     }));
 
+    // Act
     const start = performance.now();
     const result = sanitizeData(largeArray);
     const duration = performance.now() - start;
 
+    // Assert
     expect(duration).toBeLessThan(1000); // Should complete within 1 second
     
     // Verify that unwanted values are removed
@@ -250,7 +309,7 @@ describe('sanitizeData Performance Tests', () => {
   });
 
   it('Performance: Mixed Data Types', () => {
-    // Create an object with various data types
+    // Arrange
     const mixedData = {
       strings: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? '' : `value${i}`),
       numbers: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? null : i),
@@ -260,15 +319,18 @@ describe('sanitizeData Performance Tests', () => {
       arrays: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? [] : [i, i + 1, i + 2])
     };
 
+    // Act
     const start = performance.now();
     const result = sanitizeData(mixedData);
     const duration = performance.now() - start;
 
+    // Assert
     expect(duration).toBeLessThan(1000); // Should complete within 1 second
     expect(Object.keys(result).length).toBe(6); // All top-level keys should be preserved
   });
 
   it('Performance: Repeated Operations', () => {
+    // Arrange
     const data = {
       value: 42,
       nested: {
@@ -278,12 +340,14 @@ describe('sanitizeData Performance Tests', () => {
       }
     };
 
+    // Act
     const start = performance.now();
     for (let i = 0; i < 1000; i++) {
       sanitizeData(data);
     }
     const duration = performance.now() - start;
 
+    // Assert
     expect(duration).toBeLessThan(1000); // 1000 operations should complete within 1 second
   });
 }); 
