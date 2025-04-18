@@ -221,4 +221,102 @@ describe('isFunction', () => {
     expect(isFunction([])).toBe(false);
     expect(isFunction('function')).toBe(false);
   });
+});
+
+describe('sanitizeData Performance Tests', () => {
+  it('Performance: Large Nested Objects', () => {
+    // Create a large nested object
+    const largeObject: Record<string, any> = {};
+    for (let i = 0; i < 1000; i++) {
+      largeObject[`key${i}`] = {
+        nested: {
+          value: i % 2 === 0 ? null : i,
+          array: Array(10).fill(i % 3 === 0 ? null : i),
+          empty: i % 4 === 0 ? {} : { value: i }
+        }
+      };
+    }
+
+    const start = performance.now();
+    const result = sanitizeData(largeObject);
+    const duration = performance.now() - start;
+
+    expect(duration).toBeLessThan(1000); // Should complete within 1 second
+    expect(Object.keys(result).length).toBeLessThan(1000); // Some objects should be removed
+  });
+
+  it('Performance: Large Arrays', () => {
+    // Create a large array with mixed content
+    const largeArray = Array(10000).fill(null).map((_, i) => ({
+      id: i,
+      value: i % 2 === 0 ? null : i,
+      nested: i % 3 === 0 ? {} : { value: i },
+      array: Array(5).fill(i % 4 === 0 ? null : i)
+    }));
+
+    const start = performance.now();
+    const result = sanitizeData(largeArray);
+    const duration = performance.now() - start;
+
+    expect(duration).toBeLessThan(1000); // Should complete within 1 second
+    
+    // Verify that unwanted values are removed
+    result.forEach((item: any, index: number) => {
+      // id should always be preserved
+      expect(item.id).toBe(index);
+      
+      // value should not be null if it exists
+      if (item.value !== undefined) {
+        expect(item.value).not.toBeNull();
+      }
+
+      // nested should not be empty if it exists
+      if (item.nested !== undefined) {
+        expect(Object.keys(item.nested).length).toBeGreaterThan(0);
+      }
+
+      // array should not contain null values
+      if (item.array !== undefined) {
+        expect(item.array).not.toContain(null);
+      }
+    });
+  });
+
+  it('Performance: Mixed Data Types', () => {
+    // Create an object with various data types
+    const mixedData = {
+      strings: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? '' : `value${i}`),
+      numbers: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? null : i),
+      booleans: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? null : i % 2 === 0),
+      dates: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? null : new Date()),
+      objects: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? {} : { value: i }),
+      arrays: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? [] : [i, i + 1, i + 2])
+    };
+
+    const start = performance.now();
+    const result = sanitizeData(mixedData);
+    const duration = performance.now() - start;
+
+    expect(duration).toBeLessThan(1000); // Should complete within 1 second
+    expect(Object.keys(result).length).toBe(6); // All top-level keys should be preserved
+  });
+
+  it('Performance: Repeated Operations', () => {
+    const data = {
+      value: 42,
+      nested: {
+        empty: {},
+        array: [null, 1, null, 2],
+        object: { a: null, b: 1 }
+      }
+    };
+
+    const start = performance.now();
+    for (let i = 0; i < 1000; i++) {
+      sanitizeData(data);
+    }
+    const duration = performance.now() - start;
+
+    expect(duration).toBeLessThan(1000); // 1000 operations should complete within 1 second
+  });
 }); 
