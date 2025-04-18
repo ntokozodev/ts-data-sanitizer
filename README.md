@@ -1,17 +1,17 @@
-# @gabzitdev/ts-data-sanitizer
+# ts-data-sanitizer
 
 A TypeScript utility for sanitizing data by removing empty values, functions, and nulls.
 
 ## Installation
 
 ```bash
-npm install @gabzitdev/ts-data-sanitizer
+npm install ts-data-sanitizer
 ```
 
 ## Usage
 
 ```typescript
-import { sanitizeData } from '@gabzitdev/ts-data-sanitizer';
+import { sanitizeData } from 'ts-data-sanitizer';
 
 // Example 1: Basic usage
 const data = {

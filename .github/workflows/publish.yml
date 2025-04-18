@@ -15,8 +15,7 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
       - run: npm install
-      - run: npm test
-      - name: Run coverage
+      - name: Run tests with coverage
         run: npm run test:coverage
       - run: npm publish
         env:
