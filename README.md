@@ -1,6 +1,6 @@
 # ts-data-sanitizer
 
-A TypeScript utility for sanitizing data by removing empty values, functions, and nulls.
+A TypeScript utility for sanitizing data by removing empty values, functions, and nulls, returning a plain JavaScript object.
 
 ## Installation
 
@@ -22,7 +22,9 @@ const data = {
   emptyObject: {},
   nested: {
     value: null,
-    empty: ''
+    empty: '',
+    emptyObject: {},
+    date: new Date()
   }
 };
 
@@ -30,15 +32,20 @@ const sanitized = sanitizeData(data);
 // Result:
 // {
 //   name: 'John',
-//   nested: {}
+//   nested: {
+//     date: Date
+//   }
 // }
 
 // Example 2: With arrays
 const dataWithArrays = {
   items: [
     { id: 1, value: null },
-    { id: 2, value: '' }
-  ]
+    { id: 2, value: '' },
+    { id: 3, value: {} },
+    { id: 4, value: 'valid' }
+  ],
+  emptyArray: []
 };
 
 const sanitizedArrays = sanitizeData(dataWithArrays);
@@ -46,26 +53,31 @@ const sanitizedArrays = sanitizeData(dataWithArrays);
 // {
 //   items: [
 //     { id: 1 },
-//     { id: 2 }
-//   ]
+//     { id: 2 },
+//     { id: 3 },
+//     { id: 4, value: 'valid' }
+//   ],
+//   emptyArray: []
 // }
 ```
 
 ## Features
 
+- Returns a plain JavaScript object
 - Removes `null` and `undefined` values
 - Removes empty strings
-- Removes empty objects
+- Removes empty objects (objects with no properties)
 - Removes functions
+- Preserves Date objects
+- Preserves empty arrays
 - Handles nested objects and arrays
-- Preserves TypeScript types
 - Zero dependencies
 
 ## API
 
 ### `sanitizeData<T, U = T>(data: T): U`
 
-Sanitizes the input data by removing empty values, functions, and nulls.
+Sanitizes the input data by removing empty values, functions, and nulls, returning a plain JavaScript object.
 
 #### Parameters
 
@@ -73,7 +85,7 @@ Sanitizes the input data by removing empty values, functions, and nulls.
 
 #### Returns
 
-- `U` - The sanitized data (defaults to type T if U is not specified)
+- `U` - A plain JavaScript object with empty values removed (defaults to type T if U is not specified)
 
 ## License
 
