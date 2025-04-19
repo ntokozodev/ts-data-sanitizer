@@ -99,7 +99,6 @@ describe('sanitizeData', () => {
     expect(result).toEqual(data);
   });
 
-  // New test cases
   it('should handle deeply nested objects', () => {
     // Arrange
     const data = {
@@ -246,8 +245,8 @@ describe('sanitizeData', () => {
   });
 });
 
-describe('sanitizeData Performance Tests', () => {
-  it('Performance: Large Nested Objects', () => {
+describe('performance tests: sanitizeData', () => {
+  it('performance: large nested objects', () => {
     // Arrange
     const largeObject: Record<string, any> = {};
     for (let i = 0; i < 1000; i++) {
@@ -270,7 +269,7 @@ describe('sanitizeData Performance Tests', () => {
     expect(Object.keys(result).length).toBeLessThan(1000); // Some objects should be removed
   });
 
-  it('Performance: Large Arrays', () => {
+  it('performance: large arrays', () => {
     // Arrange
     const largeArray = Array(10000).fill(null).map((_, i) => ({
       id: i,
@@ -309,7 +308,7 @@ describe('sanitizeData Performance Tests', () => {
     });
   });
 
-  it('Performance: Mixed Data Types', () => {
+  it('performance: mixed data types', () => {
     // Arrange
     const mixedData = {
       strings: Array(1000).fill(null).map((_, i) => i % 2 === 0 ? '' : `value${i}`),
@@ -330,7 +329,7 @@ describe('sanitizeData Performance Tests', () => {
     expect(Object.keys(result).length).toBe(6); // All top-level keys should be preserved
   });
 
-  it('Performance: Repeated Operations', () => {
+  it('performance: repeated operations', () => {
     // Arrange
     const data = {
       value: 42,
