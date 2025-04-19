@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Block pushing all tags at once
+if echo "$GIT_PUSH_COMMAND" | grep -q -- "--tags"; then
+  echo "❌ Pushing all tags via '--tags' is not allowed."
+  echo "👉 Please push a single tag like: git push origin vX.Y.Z"
+  exit 1
+fi
+
+# Use `git for-each-ref` to find pushed tag ref
+TAG_REF=$(git for-each-ref --format='%(refname:short)' refs/tags --sort=-creatordate | head -n1)
+
+if [ -z "$TAG_REF" ]; then
+  echo "ℹ️ No tag detected. Allowing push."
+  exit 0
+fi
+
+echo "🔍 Detected tag being pushed: $TAG_REF"
+
+# Remove 'v' prefix for comparison
+TAG_VERSION="${TAG_REF#v}"
+TAG_VERSION=$(echo "$TAG_VERSION" | xargs)
+
+# Get version from package.json
+PKG_VERSION=$(node -p "require('./package.json').version" | xargs)
+
+echo "📦 package.json version: $PKG_VERSION"
+echo "🔢 Tag version: $TAG_VERSION"
+
+# Compare
+if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+  echo "❌ Version mismatch!"
+  echo "   Tag:         $TAG_VERSION"
+  echo "   package.json $PKG_VERSION"
+  exit 1
+fi
+
+echo "✅ Tag version matches package.json. Proceeding with push."
+exit 0
+
