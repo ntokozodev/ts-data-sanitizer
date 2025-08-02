@@ -8,6 +8,4 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   outDir: 'dist',
-  target: 'es2020',
-  bundle: false,
 })
